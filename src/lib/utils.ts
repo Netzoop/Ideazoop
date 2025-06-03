@@ -141,7 +141,7 @@ export function truncateText(text: string | null | undefined, maxLength: number)
   if (!text) return "";
   if (text.length <= maxLength) return text;
   
-  return `${text.substring(0, maxLength)}...`;
+  return `${text.substring(0, maxLength).trimEnd()}...`;
 }
 
 /**
