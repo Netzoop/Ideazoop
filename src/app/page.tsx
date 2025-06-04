@@ -1,31 +1,25 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { useAuth } from "@/components/auth/auth-provider";
 import { useRouter } from "next/navigation";
-import { useEffect } from "react";
 import { Badge } from "@/components/ui/badge";
 import { ArrowRight, Lightbulb, MessageSquare, CheckCircle, BarChart, Sparkles, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
 export default function Home() {
-  const { isAuthenticated, signInWithGoogle, isLoading } = useAuth();
+  const { signInWithGoogle } = useAuth();
   const router = useRouter();
 
-  // Redirect to dashboard if already authenticated
-  useEffect(() => {
-    if (isAuthenticated && !isLoading) {
-      router.push("/dashboard");
-    }
-  }, [isAuthenticated, isLoading, router]);
-
-  // Handle sign in with Google
+  // Handle sign in with Google, with fallback to email login
   const handleSignIn = async () => {
     try {
       await signInWithGoogle();
+      // If Google sign-in is successful, the auth callback route will handle redirection
     } catch (error) {
-      console.error("Error signing in:", error);
+      console.error("Error signing in with Google:", error);
+      // If Google sign-in fails, redirect to the email login page
+      router.push("/login");
     }
   };
 

@@ -15,6 +15,8 @@ interface AuthContextType {
   isAuthenticated: boolean;
   isAdmin: boolean;
   signInWithGoogle: () => Promise<void>;
+  signInWithEmail: (email: string, password: string) => Promise<void>;
+  signUpWithEmail: (email: string, password: string) => Promise<void>;
   signOut: () => Promise<void>;
   refreshProfile: () => Promise<void>;
 }
@@ -28,6 +30,8 @@ const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
   isAdmin: false,
   signInWithGoogle: async () => {},
+  signInWithEmail: async () => {},
+  signUpWithEmail: async () => {},
   signOut: async () => {},
   refreshProfile: async () => {},
 });
@@ -99,6 +103,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
     } catch (error) {
       console.error("Error in signInWithGoogle:", error);
+      throw error;
+    }
+  };
+
+  // Sign in with email and password
+  const signInWithEmail = async (email: string, password: string) => {
+    try {
+      const { error } = await supabase.auth.signInWithPassword({
+        email,
+        password,
+      });
+
+      if (error) {
+        console.error("Error signing in with email:", error);
+        throw error;
+      }
+    } catch (error) {
+      console.error("Error in signInWithEmail:", error);
+      throw error;
+    }
+  };
+
+  // Sign up with email and password
+  const signUpWithEmail = async (email: string, password: string) => {
+    try {
+      const { error } = await supabase.auth.signUp({
+        email,
+        password,
+        options: {
+          emailRedirectTo: `${window.location.origin}/auth/callback`,
+        },
+      });
+
+      if (error) {
+        console.error("Error signing up with email:", error);
+        throw error;
+      }
+    } catch (error) {
+      console.error("Error in signUpWithEmail:", error);
       throw error;
     }
   };
@@ -182,6 +225,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         isAuthenticated,
         isAdmin,
         signInWithGoogle,
+        signInWithEmail,
+        signUpWithEmail,
         signOut,
         refreshProfile,
       }}
