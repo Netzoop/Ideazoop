@@ -1,14 +1,3 @@
-/**
- * This file contains TypeScript type definitions for your Supabase database.
- * 
- * IMPORTANT: This is a placeholder file. It should be regenerated using the Supabase CLI
- * whenever the database schema changes:
- * 
- * npx supabase gen types typescript --project-id <your-project-id> --schema public > src/lib/database.types.ts
- * 
- * For more information: https://supabase.com/docs/guides/api/generating-types
- */
-
 export type Json =
   | string
   | number
@@ -20,70 +9,74 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      profiles: {
+      comments: {
         Row: {
-          id: string
-          role: Database['public']['Enums']['user_role']
-          full_name: string | null
-          avatar_url: string | null
+          author_id: string
+          body: string
           created_at: string
-          updated_at: string
+          id: string
+          idea_id: string
         }
         Insert: {
-          id: string
-          role?: Database['public']['Enums']['user_role']
-          full_name?: string | null
-          avatar_url?: string | null
+          author_id: string
+          body: string
           created_at?: string
-          updated_at?: string
+          id?: string
+          idea_id: string
         }
         Update: {
-          id?: string
-          role?: Database['public']['Enums']['user_role']
-          full_name?: string | null
-          avatar_url?: string | null
+          author_id?: string
+          body?: string
           created_at?: string
-          updated_at?: string
+          id?: string
+          idea_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "profiles_id_fkey"
-            columns: ["id"]
-            isOneToOne: true
-            referencedRelation: "users"
+            foreignKeyName: "comments_author_id_fkey"
+            columns: ["author_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
+          {
+            foreignKeyName: "comments_idea_id_fkey"
+            columns: ["idea_id"]
+            isOneToOne: false
+            referencedRelation: "ideas"
+            referencedColumns: ["id"]
+          },
         ]
       }
       ideas: {
         Row: {
+          created_at: string
+          description: string
           id: string
           owner_id: string
-          title: string
-          description: string
+          status: Database["public"]["Enums"]["idea_status"]
           tags: string[] | null
-          status: Database['public']['Enums']['idea_status']
-          created_at: string
+          title: string
           updated_at: string
         }
         Insert: {
+          created_at?: string
+          description: string
           id?: string
           owner_id: string
-          title: string
-          description: string
+          status?: Database["public"]["Enums"]["idea_status"]
           tags?: string[] | null
-          status?: Database['public']['Enums']['idea_status']
-          created_at?: string
+          title: string
           updated_at?: string
         }
         Update: {
+          created_at?: string
+          description?: string
           id?: string
           owner_id?: string
-          title?: string
-          description?: string
+          status?: Database["public"]["Enums"]["idea_status"]
           tags?: string[] | null
-          status?: Database['public']['Enums']['idea_status']
-          created_at?: string
+          title?: string
           updated_at?: string
         }
         Relationships: [
@@ -93,77 +86,45 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
         ]
       }
-      comments: {
+      notifications: {
         Row: {
+          created_at: string
           id: string
           idea_id: string
-          author_id: string
-          body: string
-          created_at: string
+          meta: Json | null
+          read: boolean
+          type: string
+          user_id: string
         }
         Insert: {
+          created_at?: string
           id?: string
           idea_id: string
-          author_id: string
-          body: string
-          created_at?: string
+          meta?: Json | null
+          read?: boolean
+          type: string
+          user_id: string
         }
         Update: {
+          created_at?: string
           id?: string
           idea_id?: string
-          author_id?: string
-          body?: string
-          created_at?: string
+          meta?: Json | null
+          read?: boolean
+          type?: string
+          user_id?: string
         }
         Relationships: [
           {
-            foreignKeyName: "comments_idea_id_fkey"
+            foreignKeyName: "notifications_idea_id_fkey"
             columns: ["idea_id"]
             isOneToOne: false
             referencedRelation: "ideas"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "comments_author_id_fkey"
-            columns: ["author_id"]
-            isOneToOne: false
-            referencedRelation: "profiles"
-            referencedColumns: ["id"]
-          }
-        ]
-      }
-      notifications: {
-        Row: {
-          id: string
-          user_id: string
-          idea_id: string
-          type: string
-          meta: Json | null
-          read: boolean
-          created_at: string
-        }
-        Insert: {
-          id?: string
-          user_id: string
-          idea_id: string
-          type: string
-          meta?: Json | null
-          read?: boolean
-          created_at?: string
-        }
-        Update: {
-          id?: string
-          user_id?: string
-          idea_id?: string
-          type?: string
-          meta?: Json | null
-          read?: boolean
-          created_at?: string
-        }
-        Relationships: [
           {
             foreignKeyName: "notifications_user_id_fkey"
             columns: ["user_id"]
@@ -171,36 +132,29 @@ export type Database = {
             referencedRelation: "profiles"
             referencedColumns: ["id"]
           },
-          {
-            foreignKeyName: "notifications_idea_id_fkey"
-            columns: ["idea_id"]
-            isOneToOne: false
-            referencedRelation: "ideas"
-            referencedColumns: ["id"]
-          }
         ]
       }
       openai_logs: {
         Row: {
+          created_at: string
           id: string
-          user_id: string
           prompt: string
           response: Json
-          created_at: string
+          user_id: string
         }
         Insert: {
+          created_at?: string
           id?: string
-          user_id: string
           prompt: string
           response: Json
-          created_at?: string
+          user_id: string
         }
         Update: {
+          created_at?: string
           id?: string
-          user_id?: string
           prompt?: string
           response?: Json
-          created_at?: string
+          user_id?: string
         }
         Relationships: [
           {
@@ -209,30 +163,174 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "profiles"
             referencedColumns: ["id"]
-          }
+          },
         ]
+      }
+      profiles: {
+        Row: {
+          avatar_url: string | null
+          created_at: string
+          full_name: string | null
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          updated_at: string
+        }
+        Insert: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Update: {
+          avatar_url?: string | null
+          created_at?: string
+          full_name?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          updated_at?: string
+        }
+        Relationships: []
       }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      get_dashboard_counts: {
-        Args: { user_id: string }
-        Returns: Json
-      }
-      get_admin_dashboard_counts: {
-        Args: Record<string, never>
-        Returns: Json
-      }
       create_admin_user: {
         Args: { email: string; password: string }
         Returns: string
       }
+      get_admin_dashboard_counts: {
+        Args: Record<PropertyKey, never>
+        Returns: Json
+      }
+      get_dashboard_counts: {
+        Args: { user_id: string }
+        Returns: Json
+      }
     }
     Enums: {
-      user_role: "owner" | "admin"
       idea_status: "draft" | "submitted" | "approved" | "rejected"
+      user_role: "owner" | "admin"
+    }
+    CompositeTypes: {
+      [_ in never]: never
     }
   }
 }
+
+type DefaultSchema = Database[Extract<keyof Database, "public">]
+
+export type Tables<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof (DefaultSchema["Tables"] & DefaultSchema["Views"])
+    | { schema: keyof Database },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+        Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? (Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"] &
+      Database[DefaultSchemaTableNameOrOptions["schema"]]["Views"])[TableName] extends {
+      Row: infer R
+    }
+    ? R
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])
+    ? (DefaultSchema["Tables"] &
+        DefaultSchema["Views"])[DefaultSchemaTableNameOrOptions] extends {
+        Row: infer R
+      }
+      ? R
+      : never
+    : never
+
+export type TablesInsert<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof Database },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Insert: infer I
+    }
+    ? I
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Insert: infer I
+      }
+      ? I
+      : never
+    : never
+
+export type TablesUpdate<
+  DefaultSchemaTableNameOrOptions extends
+    | keyof DefaultSchema["Tables"]
+    | { schema: keyof Database },
+  TableName extends DefaultSchemaTableNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"]
+    : never = never,
+> = DefaultSchemaTableNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaTableNameOrOptions["schema"]]["Tables"][TableName] extends {
+      Update: infer U
+    }
+    ? U
+    : never
+  : DefaultSchemaTableNameOrOptions extends keyof DefaultSchema["Tables"]
+    ? DefaultSchema["Tables"][DefaultSchemaTableNameOrOptions] extends {
+        Update: infer U
+      }
+      ? U
+      : never
+    : never
+
+export type Enums<
+  DefaultSchemaEnumNameOrOptions extends
+    | keyof DefaultSchema["Enums"]
+    | { schema: keyof Database },
+  EnumName extends DefaultSchemaEnumNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"]
+    : never = never,
+> = DefaultSchemaEnumNameOrOptions extends { schema: keyof Database }
+  ? Database[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
+  : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
+    ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
+    : never
+
+export type CompositeTypes<
+  PublicCompositeTypeNameOrOptions extends
+    | keyof DefaultSchema["CompositeTypes"]
+    | { schema: keyof Database },
+  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
+    schema: keyof Database
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
+    : never = never,
+> = PublicCompositeTypeNameOrOptions extends { schema: keyof Database }
+  ? Database[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
+  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
+    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
+    : never
+
+export const Constants = {
+  public: {
+    Enums: {
+      idea_status: ["draft", "submitted", "approved", "rejected"],
+      user_role: ["owner", "admin"],
+    },
+  },
+} as const
