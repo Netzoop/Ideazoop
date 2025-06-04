@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AuthProvider } from "@/components/auth/auth-provider";
+import { QueryProvider } from "@/components/providers/query-provider";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,25 +14,12 @@ const geistMono = Geist_Mono({
   subsets: ["latin"],
 });
 
-// Create a client
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      staleTime: 60 * 1000, // 1 minute
-      refetchOnWindowFocus: false,
-    },
-  },
-});
-
 export const metadata: Metadata = {
   title: "Ideazoop - Idea-to-Product Platform",
   description: "Submit, collaborate, and track ideas from concept to approval with Ideazoop",
   keywords: ["idea management", "innovation platform", "product development", "collaboration"],
   authors: [{ name: "Netzoop" }],
   creator: "Netzoop",
-  viewport: "width=device-width, initial-scale=1",
-  themeColor: "#ffffff",
-  colorScheme: "light dark",
   manifest: "/manifest.json",
   icons: {
     icon: "/favicon.ico",
@@ -50,9 +37,9 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} min-h-screen bg-background font-sans antialiased`}
       >
-        <QueryClientProvider client={queryClient}>
+        <QueryProvider>
           <AuthProvider>{children}</AuthProvider>
-        </QueryClientProvider>
+        </QueryProvider>
       </body>
     </html>
   );
